@@ -1,0 +1,359 @@
+-- MySQL Administrator dump 1.4
+--
+-- ------------------------------------------------------
+-- Server version	5.1.33-community
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+
+
+--
+-- Create schema gst
+--
+
+CREATE DATABASE IF NOT EXISTS gst;
+USE gst;
+
+--
+-- Definition of table `apply_gst`
+--
+
+DROP TABLE IF EXISTS `apply_gst`;
+CREATE TABLE `apply_gst` (
+  `g_id` varchar(10) NOT NULL DEFAULT '',
+  `billno` int(11) NOT NULL DEFAULT '0',
+  `quantity` int(11) DEFAULT NULL,
+  PRIMARY KEY (`g_id`,`billno`),
+  KEY `billno` (`billno`),
+  CONSTRAINT `apply_gst_ibfk_1` FOREIGN KEY (`g_id`) REFERENCES `goods` (`g_id`) ON DELETE CASCADE,
+  CONSTRAINT `apply_gst_ibfk_2` FOREIGN KEY (`billno`) REFERENCES `bills` (`billno`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `apply_gst`
+--
+
+/*!40000 ALTER TABLE `apply_gst` DISABLE KEYS */;
+INSERT INTO `apply_gst` (`g_id`,`billno`,`quantity`) VALUES 
+ ('adfd1234',1001,2),
+ ('esdty4234',1001,2),
+ ('esdty4234',1002,1),
+ ('esydj9583',1004,1),
+ ('esyui4583',1004,2);
+/*!40000 ALTER TABLE `apply_gst` ENABLE KEYS */;
+
+
+--
+-- Definition of table `bills`
+--
+
+DROP TABLE IF EXISTS `bills`;
+CREATE TABLE `bills` (
+  `billno` int(11) NOT NULL,
+  `to_gstn` varchar(15) DEFAULT NULL,
+  `dateofbill` date DEFAULT NULL,
+  PRIMARY KEY (`billno`),
+  UNIQUE KEY `billno` (`billno`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `bills`
+--
+
+/*!40000 ALTER TABLE `bills` DISABLE KEYS */;
+INSERT INTO `bills` (`billno`,`to_gstn`,`dateofbill`) VALUES 
+ (1001,'1234AAAA234','2017-06-13'),
+ (1002,'A2W43245634','2017-07-23'),
+ (1003,'A2W4ABCDA234','2017-06-15'),
+ (1004,'A2W4ABCDW234','2017-06-04'),
+ (1005,'A2W4ABCDA234','2017-07-20'),
+ (1006,'A2W4ABCDW234','2017-07-10'),
+ (1008,'A2W4WBFFW234','2017-08-11'),
+ (1009,'A2W4WBFFW234','2017-06-07'),
+ (1010,'A2W4AADF34634','2017-06-07');
+/*!40000 ALTER TABLE `bills` ENABLE KEYS */;
+
+
+--
+-- Definition of table `files`
+--
+
+DROP TABLE IF EXISTS `files`;
+CREATE TABLE `files` (
+  `gstn` varchar(15) DEFAULT NULL,
+  `return_no` int(11) NOT NULL,
+  PRIMARY KEY (`return_no`),
+  KEY `gstn` (`gstn`),
+  CONSTRAINT `files_ibfk_1` FOREIGN KEY (`gstn`) REFERENCES `organisation` (`gstn`) ON DELETE CASCADE,
+  CONSTRAINT `files_ibfk_2` FOREIGN KEY (`return_no`) REFERENCES `org_return` (`return_no`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `files`
+--
+
+/*!40000 ALTER TABLE `files` DISABLE KEYS */;
+INSERT INTO `files` (`gstn`,`return_no`) VALUES 
+ ('1234aaaaa234',12345),
+ ('1234aaaaa234',12346),
+ ('A2W42345634',12347),
+ ('A2W42345634',12348),
+ ('A2W4AADF34634',12349),
+ ('A2W4ABCDA234',12350),
+ ('A2W4ABCDW234',12351),
+ ('A2W4ABCDW234',12352),
+ ('A2W4ABCDW234',12353),
+ ('A2W4WBFFW234',12354),
+ ('A2W4WBFFW234',12355),
+ ('A2W4WBFFW234',12356);
+/*!40000 ALTER TABLE `files` ENABLE KEYS */;
+
+
+--
+-- Definition of table `generates`
+--
+
+DROP TABLE IF EXISTS `generates`;
+CREATE TABLE `generates` (
+  `gstn` varchar(15) DEFAULT NULL,
+  `billno` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`billno`),
+  KEY `gstn` (`gstn`),
+  CONSTRAINT `generates_ibfk_1` FOREIGN KEY (`gstn`) REFERENCES `organisation` (`gstn`) ON DELETE CASCADE,
+  CONSTRAINT `generates_ibfk_2` FOREIGN KEY (`billno`) REFERENCES `bills` (`billno`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `generates`
+--
+
+/*!40000 ALTER TABLE `generates` DISABLE KEYS */;
+INSERT INTO `generates` (`gstn`,`billno`) VALUES 
+ ('1234AAAAA234',1001),
+ ('1234AAAAA234',1002),
+ ('A2W42345634',1003),
+ ('A2W4AADF34634',1004),
+ ('A2W4AADF34634',1005),
+ ('A2W4ABCDA234',1006),
+ ('A2W4ABCDW234',1008),
+ ('A2W4WBFFW234',1009),
+ ('A2W4WBFFW234',1010);
+/*!40000 ALTER TABLE `generates` ENABLE KEYS */;
+
+
+--
+-- Definition of table `goods`
+--
+
+DROP TABLE IF EXISTS `goods`;
+CREATE TABLE `goods` (
+  `g_id` varchar(10) NOT NULL,
+  `p_name` varchar(15) NOT NULL,
+  `typename` varchar(15) DEFAULT NULL,
+  `slab` int(11) DEFAULT NULL,
+  `rate` float DEFAULT NULL,
+  PRIMARY KEY (`g_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `goods`
+--
+
+/*!40000 ALTER TABLE `goods` DISABLE KEYS */;
+INSERT INTO `goods` (`g_id`,`p_name`,`typename`,`slab`,`rate`) VALUES 
+ ('adfd1234','fairnlovely','cosmetic',12,95.2),
+ ('esdfd1234','probook6470b','electronics',28,50045),
+ ('esdty4234','lg AC','luxury',28,24452.8),
+ ('eswy4234','hp charger','electronics',28,1203.4),
+ ('eswyr6634','hp charger','electronics',28,1306.5),
+ ('esydj9583','tmh DBMSByKorth','education',5,584.63),
+ ('esyui4583','gk book','education',5,82.13);
+/*!40000 ALTER TABLE `goods` ENABLE KEYS */;
+
+
+--
+-- Definition of table `org_return`
+--
+
+DROP TABLE IF EXISTS `org_return`;
+CREATE TABLE `org_return` (
+  `return_no` int(11) NOT NULL,
+  `return_date` date DEFAULT NULL,
+  `return_type` varchar(8) DEFAULT NULL,
+  PRIMARY KEY (`return_no`),
+  UNIQUE KEY `return_no` (`return_no`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `org_return`
+--
+
+/*!40000 ALTER TABLE `org_return` DISABLE KEYS */;
+INSERT INTO `org_return` (`return_no`,`return_date`,`return_type`) VALUES 
+ (12345,'2016-12-12','YEARLY'),
+ (12346,'2017-07-12','MONTHLY'),
+ (12347,'2017-08-12','MONTHLY'),
+ (12348,'2017-08-15','MONTHLY'),
+ (12349,'2017-07-15','MONTHLY'),
+ (12350,'2017-07-10','MONTHLY'),
+ (12351,'2017-09-10','MONTHLY'),
+ (12352,'2017-11-10','MONTHLY'),
+ (12353,'2017-10-10','MONTHLY'),
+ (12354,'2017-12-20','YEARLY'),
+ (12355,'2017-12-25','YEARLY'),
+ (12356,'2017-12-26','YEARLY');
+/*!40000 ALTER TABLE `org_return` ENABLE KEYS */;
+
+
+--
+-- Definition of table `organisation`
+--
+
+DROP TABLE IF EXISTS `organisation`;
+CREATE TABLE `organisation` (
+  `gstn` varchar(15) NOT NULL,
+  `org_type` varchar(20) DEFAULT NULL,
+  `name` varchar(40) DEFAULT NULL,
+  `plot_no` varchar(15) DEFAULT NULL,
+  `lane` varchar(35) DEFAULT NULL,
+  `landmark` varchar(35) DEFAULT NULL,
+  `city` varchar(15) DEFAULT NULL,
+  `pincode` int(11) NOT NULL,
+  PRIMARY KEY (`gstn`),
+  UNIQUE KEY `gstn` (`gstn`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `organisation`
+--
+
+/*!40000 ALTER TABLE `organisation` DISABLE KEYS */;
+INSERT INTO `organisation` (`gstn`,`org_type`,`name`,`plot_no`,`lane`,`landmark`,`city`,`pincode`) VALUES 
+ ('1234AAAAA234','manufac','relaince','40/20 e-block','M.G. Road','Ajanta Circle','Mumbai',100045),
+ ('A2W42345634','wholesel','ganpati','36/36','Gandhi Nagar','Near Roadways','Delhi',200876),
+ ('A2W4AADF34634','Manufac','Nestle','32/45 a-block','Canaut Palace','Near metro','Delhi',200126),
+ ('A2W4ABCDA234','retailer','kishanlal','12/26 e-block','J.L.N. Road','Near city hos.','Jaipur',300001),
+ ('A2W4ABCDW234','retailer','a. sweets','14/66 t-block','New City Lane','Near mnit','Jaipur',300001),
+ ('A2W4WBFFW234','education','jee inst.','33/56 t-block','New Lane','Gangashahar','Bikaner',334401);
+/*!40000 ALTER TABLE `organisation` ENABLE KEYS */;
+
+
+--
+-- Definition of table `owned_by`
+--
+
+DROP TABLE IF EXISTS `owned_by`;
+CREATE TABLE `owned_by` (
+  `gstn` varchar(15) NOT NULL DEFAULT '',
+  `uidai` varchar(13) NOT NULL DEFAULT '',
+  `shares` int(11) DEFAULT NULL,
+  PRIMARY KEY (`uidai`,`gstn`),
+  KEY `gstn` (`gstn`),
+  CONSTRAINT `owned_by_ibfk_1` FOREIGN KEY (`gstn`) REFERENCES `organisation` (`gstn`) ON DELETE CASCADE,
+  CONSTRAINT `owned_by_ibfk_2` FOREIGN KEY (`uidai`) REFERENCES `owner` (`uidai`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `owned_by`
+--
+
+/*!40000 ALTER TABLE `owned_by` DISABLE KEYS */;
+INSERT INTO `owned_by` (`gstn`,`uidai`,`shares`) VALUES 
+ ('A2W42345634','111133335555',223450),
+ ('A2W4AADF34634','111133335555',234670),
+ ('A2W4WBFFW234','123412341234',2500948),
+ ('A2W4WBFFW234','123512351235',2524948),
+ ('A2W4ABCDA234','123612361236',2546000),
+ ('A2W4ABCDW234','123612361236',25000),
+ ('A2W42345634','222233335555',25430),
+ ('1234AAAAA234','222244446666',235670),
+ ('A2W4AADF34634','222244446666',235670),
+ ('A2W4ABCDA234','333344442222',2542300);
+/*!40000 ALTER TABLE `owned_by` ENABLE KEYS */;
+
+
+--
+-- Definition of table `owner`
+--
+
+DROP TABLE IF EXISTS `owner`;
+CREATE TABLE `owner` (
+  `name` varchar(35) NOT NULL,
+  `uidai` varchar(13) NOT NULL,
+  `panid` varchar(11) DEFAULT NULL,
+  `current_ac_no` int(11) NOT NULL,
+  `bank_name` varchar(20) NOT NULL,
+  `ifscode` varchar(15) NOT NULL,
+  PRIMARY KEY (`uidai`),
+  UNIQUE KEY `uidai` (`uidai`),
+  UNIQUE KEY `panid` (`panid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `owner`
+--
+
+/*!40000 ALTER TABLE `owner` DISABLE KEYS */;
+INSERT INTO `owner` (`name`,`uidai`,`panid`,`current_ac_no`,`bank_name`,`ifscode`) VALUES 
+ ('Rahul','111133335555','ASSJW873P',22345670,'SWISS BANK','SWB3129A'),
+ ('Havlett','123412341234','asdfw2356n',23456543,'BOB','BARB0AJME'),
+ ('Packard','123512351235','qwert2345a',34523678,'SBI','SBI10027'),
+ ('Packard','123612361236','qwert2323e',764589245,'SBI','SBI10037'),
+ ('Gambler','222233335555','FHSJW873P',244574950,'FEDERAL BANK','FED3489'),
+ ('Mukesh','222244446666','KJSJW8231A',22345670,'World Bank','WSB3232'),
+ ('Procter','333344442222','FHSJD9873P',28374950,'FEDERAL BANK','FED1089');
+/*!40000 ALTER TABLE `owner` ENABLE KEYS */;
+
+
+--
+-- Definition of table `phone`
+--
+
+DROP TABLE IF EXISTS `phone`;
+CREATE TABLE `phone` (
+  `PHONE_NO` bigint(20) NOT NULL DEFAULT '0',
+  `uidai` varchar(13) NOT NULL DEFAULT '',
+  PRIMARY KEY (`uidai`,`PHONE_NO`),
+  UNIQUE KEY `PHONE_NO` (`PHONE_NO`),
+  CONSTRAINT `phone_ibfk_1` FOREIGN KEY (`uidai`) REFERENCES `owner` (`uidai`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `phone`
+--
+
+/*!40000 ALTER TABLE `phone` DISABLE KEYS */;
+INSERT INTO `phone` (`PHONE_NO`,`uidai`) VALUES 
+ (9210093200,'333344442222'),
+ (9210097200,'333344442222'),
+ (9210211200,'111133335555'),
+ (9210233200,'111133335555'),
+ (9210233211,'222244446666'),
+ (9210266200,'222233335555'),
+ (9210466200,'222233335555'),
+ (9210566200,'222233335555'),
+ (9212233211,'222244446666'),
+ (9460223431,'123412341234'),
+ (9460293431,'123412341234'),
+ (9810098100,'123512351235'),
+ (9810098200,'123612361236'),
+ (9810098300,'123612361236');
+/*!40000 ALTER TABLE `phone` ENABLE KEYS */;
+
+
+
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
